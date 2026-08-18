@@ -1,0 +1,34 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Automatic Car Heater Timer",
+        "description": "Choose the outside temperature sensor and the switch that controls your car heater, then adjust the heating parameters if needed.",
+        "data": {
+          "name": "Name",
+          "temperature_sensor": "Outside temperature sensor",
+          "heater_switch": "Car heater switch",
+          "min_temp": "Min temperature (use minimum heating time at or above this)",
+          "max_temp": "Max temperature (use maximum heating time at or below this)",
+          "min_time": "Min heating time (minutes)",
+          "max_time": "Max heating time (minutes)",
+          "off_delay": "Off delay after ready time (minutes)"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Car heater parameters",
+        "data": {
+          "min_temp": "Min temperature (use minimum heating time at or above this)",
+          "max_temp": "Max temperature (use maximum heating time at or below this)",
+          "min_time": "Min heating time (minutes)",
+          "max_time": "Max heating time (minutes)",
+          "off_delay": "Off delay after ready time (minutes)"
+        }
+      }
+    }
+  }
+}

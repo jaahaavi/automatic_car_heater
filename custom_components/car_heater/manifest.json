@@ -1,0 +1,13 @@
+{
+  "domain": "car_heater",
+  "name": "Automatic Car Heater Timer",
+  "codeowners": [@jaahaavi],
+  "config_flow": true,
+  "dependencies": ["http", "frontend"],
+  "documentation": "https://github.com/jaahaavi/automatic_car_heater",
+  "integration_type": "service",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/jaahaavi/automatic_car_heater/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}
