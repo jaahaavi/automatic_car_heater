@@ -1,7 +1,7 @@
 {
   "domain": "car_heater",
   "name": "Automatic Car Heater Timer",
-  "codeowners": [@jaahaavi],
+  "codeowners": ["@jaahaavi"],
   "config_flow": true,
   "dependencies": ["http", "frontend"],
   "documentation": "https://github.com/jaahaavi/automatic_car_heater",
