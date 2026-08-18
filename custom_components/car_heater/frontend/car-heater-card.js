@@ -373,7 +373,9 @@ class CarHeaterCard extends HTMLElement {
   }
 }
 
-customElements.define("car-heater-card", CarHeaterCard);
+if (!customElements.get("car-heater-card")) {
+  customElements.define("car-heater-card", CarHeaterCard);
+}
 
 /* ------------------------------------------------------------------ */
 /* Visual editor                                                       */
@@ -443,7 +445,9 @@ class CarHeaterCardEditor extends HTMLElement {
   }
 }
 
-customElements.define("car-heater-card-editor", CarHeaterCardEditor);
+if (!customElements.get("car-heater-card-editor")) {
+  customElements.define("car-heater-card-editor", CarHeaterCardEditor);
+}
 
 window.customCards = window.customCards || [];
 window.customCards.push({
