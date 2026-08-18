@@ -58,7 +58,10 @@ unavailable, the maximum time is used (fail-safe).
 3. Continue with **Set up the integration** below.
 
 The Lovelace card is bundled with the integration and **auto-registered as a
-frontend resource** — you do not need to add a dashboard resource manually.
+Lovelace resource** once you add an instance — you do not need to add a dashboard
+resource manually. (In YAML-mode dashboards it is loaded via script injection
+instead; add `/car_heater_frontend/car-heater-card.js` as a `module` resource in
+your `lovelace:` config if you prefer.)
 
 ### Manual
 
@@ -100,8 +103,11 @@ type: custom:car-heater-card
 With a single instance the card auto-detects everything. For multiple cars, set
 `prefix:` to the object-id prefix of the instance you want.
 
-> If the card doesn't appear right after install, hard-refresh the browser
-> (Ctrl/Cmd+Shift+R) so the newly registered resource loads.
+> The card is registered as a Lovelace resource when the integration starts, so
+> it loads on every device (including the phone app). After first install, do one
+> full refresh per device (close all HA tabs / restart the app) so the new
+> resource is picked up. Remove any old manual resource pointing at
+> `/local/car-heater-card.js` — that path is no longer used.
 
 ---
 

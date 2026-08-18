@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 DOMAIN = "car_heater"
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 # Frontend (Lovelace card) auto-registration
 CARD_URL_PATH = "/car_heater_frontend/car-heater-card.js"
 CARD_FILENAME = "car-heater-card.js"
-FRONTEND_REGISTERED = "frontend_registered"
+STATIC_PATH_REGISTERED = "static_path_registered"
+RESOURCE_REGISTERED = "resource_registered"
 
 # Config keys (config flow / options)
 CONF_NAME = "name"
