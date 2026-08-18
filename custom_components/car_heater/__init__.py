@@ -11,6 +11,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.start import async_at_started
+from homeassistant.helpers.typing import ConfigType
 
 from .const import (
     CARD_FILENAME,
@@ -111,9 +112,15 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
 
     if not domain_data.get(STATIC_PATH_REGISTERED):
         card_path = Path(__file__).parent / "frontend" / CARD_FILENAME
-        await hass.http.async_register_static_paths(
-            [StaticPathConfig(CARD_URL_PATH, str(card_path), False)]
-        )
+        try:
+            await hass.http.async_register_static_paths(
+                [StaticPathConfig(CARD_URL_PATH, str(card_path), False)]
+            )
+        except RuntimeError as err:
+            # The aiohttp route persists for the whole process, so a re-run
+            # (e.g. after an integration reload) can hit "already registered".
+            # That is harmless — the path is already served.
+            _LOGGER.debug("Static path already registered: %s", err)
         domain_data[STATIC_PATH_REGISTERED] = True
 
     if domain_data.get(RESOURCE_REGISTERED):
@@ -132,10 +139,14 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
 # ----------------------------------------------------------------------
 # Config entry lifecycle
 # ----------------------------------------------------------------------
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Register the frontend card once, before any config entries are set up."""
+    await _async_register_frontend(hass)
+    return True
+
+
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Automatic Car Heater Timer from a config entry."""
-    await _async_register_frontend(hass)
-
     coordinator = CarHeaterCoordinator(hass, entry)
     await coordinator.async_load()
     coordinator.async_setup_listeners()

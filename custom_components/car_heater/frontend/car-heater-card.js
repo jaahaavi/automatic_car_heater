@@ -460,7 +460,7 @@ window.customCards.push({
 });
 
 console.info(
-  "%c CAR-HEATER-CARD %c 1.1.0 ",
+  "%c CAR-HEATER-CARD %c 1.1.1 ",
   "color: white; background: #ff9800; font-weight: 700;",
   "color: #ff9800; background: white; font-weight: 700;"
 );
