@@ -1,4 +1,4 @@
-"""Switches: schedule enable/disable and the 2-hour manual boost."""
+"""Switches: schedule enable/disable and the 2-hour manual heating."""
 
 from __future__ import annotations
 
@@ -54,7 +54,7 @@ class CarHeaterManualSwitch(CarHeaterEntity, SwitchEntity):
     _attr_icon = "mdi:car-turbocharger"
 
     def __init__(self, coordinator: CarHeaterCoordinator) -> None:
-        super().__init__(coordinator, "switch", "manual", "Manual boost")
+        super().__init__(coordinator, "switch", "manual", "Manual heating")
 
     @property
     def is_on(self) -> bool | None:

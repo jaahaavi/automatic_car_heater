@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 DOMAIN = "car_heater"
-VERSION = "1.1.1"
+VERSION = "1.2.0"
 
 # Frontend (Lovelace card) auto-registration
 CARD_URL_PATH = "/car_heater_frontend/car-heater-card.js"
@@ -27,7 +27,7 @@ DEFAULT_MAX_TEMP = -20.0      # °C at (or below) which the maximum heating time
 DEFAULT_MIN_TIME = 30         # minutes of heating at min_temp
 DEFAULT_MAX_TIME = 120        # minutes of heating at max_temp
 DEFAULT_OFF_DELAY = 15        # minutes to keep heating after the ready time
-MANUAL_OVERRIDE_MINUTES = 120  # 2 hour manual boost
+MANUAL_OVERRIDE_MINUTES = 120  # 2 hour manual heating
 
 # Weekday order matching Python's datetime.weekday() (Mon=0 ... Sun=6)
 WEEKDAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]

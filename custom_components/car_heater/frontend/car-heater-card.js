@@ -146,6 +146,10 @@ class CarHeaterCard extends HTMLElement {
       .day.sel { background: var(--primary-color); color: var(--text-primary-color, #fff); border-color: var(--primary-color); }
       .field { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
       .field label { color: var(--secondary-text-color); }
+      .schedule-row {
+        border-top: 1px solid var(--divider-color);
+        padding-top: 12px;
+      }
       input[type="time"] {
         font-size: 1rem; padding: 8px; border-radius: 8px;
         border: 1px solid var(--divider-color);
@@ -182,6 +186,13 @@ class CarHeaterCard extends HTMLElement {
           <div class="row"><span class="k">Next ready</span><span class="v" id="nextReady">—</span></div>
           <div class="row"><span class="k">Heating starts</span><span class="v" id="nextStart">—</span></div>
         </div>
+        <div class="field schedule-row">
+          <label for="scheduleToggle">Schedule enabled</label>
+          <span class="switch">
+            <input type="checkbox" id="scheduleToggle" />
+            <span class="slider" id="scheduleSlider"></span>
+          </span>
+        </div>
         <div class="actions">
           <button class="btn" id="manualBtn"></button>
           <button class="btn" id="configBtn">Configure leaving time</button>
@@ -192,13 +203,6 @@ class CarHeaterCard extends HTMLElement {
           <div class="field">
             <label for="readyInput">Ready by</label>
             <input type="time" id="readyInput" />
-          </div>
-          <div class="field">
-            <label for="scheduleToggle">Schedule enabled</label>
-            <span class="switch">
-              <input type="checkbox" id="scheduleToggle" />
-              <span class="slider" id="scheduleSlider"></span>
-            </span>
           </div>
         </div>
       </div>
@@ -275,21 +279,27 @@ class CarHeaterCard extends HTMLElement {
     const dur = a.heating_duration;
     const parts = [];
     if (temp !== null && temp !== undefined) parts.push(`${temp}°C outside`);
-    if (dur !== null && dur !== undefined) parts.push(`${dur} min heating`);
-    if (a.manual_active) parts.push("manual boost");
+    if (a.heating_needed !== false && dur) parts.push(`${dur} min heating`);
+    if (a.manual_active) parts.push("manual heating");
     e.statusSub.textContent = parts.join(" · ");
 
-    e.nextReady.textContent = a.schedule_enabled
-      ? this._fmt(a.next_ready)
-      : "Schedule off";
-    e.nextStart.textContent = a.schedule_enabled ? this._fmt(a.next_start) : "—";
+    if (!a.schedule_enabled) {
+      e.nextReady.textContent = "Schedule off";
+      e.nextStart.textContent = "—";
+    } else {
+      e.nextReady.textContent = this._fmt(a.next_ready);
+      e.nextStart.textContent =
+        a.heating_needed === false
+          ? "Not needed — warm enough"
+          : this._fmt(a.next_start);
+    }
 
     if (a.manual_active) {
-      e.manualBtn.textContent = `Stop boost (${this._remaining(a.manual_until)})`;
+      e.manualBtn.textContent = `Stop heating (${this._remaining(a.manual_until)})`;
       e.manualBtn.classList.add("active");
       e.manualBtn.classList.remove("primary");
     } else {
-      e.manualBtn.textContent = "Boost heating 2 h";
+      e.manualBtn.textContent = "Manual heating 2 h";
       e.manualBtn.classList.add("primary");
       e.manualBtn.classList.remove("active");
     }
@@ -460,7 +470,7 @@ window.customCards.push({
 });
 
 console.info(
-  "%c CAR-HEATER-CARD %c 1.1.1 ",
+  "%c CAR-HEATER-CARD %c 1.2.0 ",
   "color: white; background: #ff9800; font-weight: 700;",
   "color: #ff9800; background: white; font-weight: 700;"
 );

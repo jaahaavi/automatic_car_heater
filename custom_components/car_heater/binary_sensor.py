@@ -55,6 +55,7 @@ class CarHeaterHeatingSensor(CarHeaterEntity, BinarySensorEntity):
             "device_name": self.coordinator.entry.data.get("name"),
             "outside_temperature": data.get("outside_temperature"),
             "heating_duration": data.get("duration"),
+            "heating_needed": data.get("heating_needed"),
             "scheduled_active": data.get("scheduled_active"),
             "manual_active": data.get("manual_active"),
             "manual_until": manual_until.isoformat() if manual_until else None,

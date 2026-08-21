@@ -239,15 +239,23 @@ class CarHeaterCoordinator(DataUpdateCoordinator):
         """Compute the desired state without side effects."""
         p = self.params
         temp = self._outside_temperature()
-        duration = self._duration_minutes(temp)
+        # No block heating is needed when it is warm enough (at or above
+        # min_temp). Unknown temperature -> heat anyway (fail safe).
+        heating_needed = temp is None or temp < p["min_temp"]
+        duration = self._duration_minutes(temp) if heating_needed else 0
+
         next_ready = self._next_ready(now)
         next_start = (
-            next_ready - timedelta(minutes=duration) if next_ready else None
+            next_ready - timedelta(minutes=duration)
+            if next_ready and heating_needed
+            else None
         )
         off = timedelta(minutes=p["off_delay"])
 
         scheduled_active = bool(
-            next_ready and next_start <= now <= next_ready + off
+            heating_needed
+            and next_ready
+            and next_start <= now <= next_ready + off
         )
         manual_active = bool(self.manual_until and now < self.manual_until)
         desired_on = scheduled_active or manual_active
@@ -259,6 +267,7 @@ class CarHeaterCoordinator(DataUpdateCoordinator):
             "manual_until": self.manual_until,
             "outside_temperature": temp,
             "duration": duration,
+            "heating_needed": heating_needed,
             "next_ready": next_ready,
             "next_start": next_start,
         }
@@ -284,7 +293,7 @@ class CarHeaterCoordinator(DataUpdateCoordinator):
             self._we_turned_on = False
 
     async def _async_update_data(self) -> dict:
-        """Periodic evaluation: expire manual boost, compute state, drive switch."""
+        """Periodic evaluation: expire manual heating, compute state, drive switch."""
         now = dt_util.now()
 
         if self.manual_until and now >= self.manual_until:

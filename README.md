@@ -19,7 +19,7 @@ right time whether or not any dashboard is open. The card is only the UI.
 - Card elements:
   - **Status** — heating / idle (plus outside temp and computed duration).
   - **Next ready** and **heating starts** times.
-  - **Manual boost** — heat now for 2 hours, then auto-off.
+  - **Manual heating** — heat now for 2 hours, then auto-off.
   - **Configure leaving time** — weekday selection (Mon–Sun), a "ready by" time,
     and an enable/disable toggle (turn off for holidays).
 
@@ -27,27 +27,32 @@ right time whether or not any dashboard is open. The card is only the UI.
 
 | Outside temp | Heating time |
 |---|---|
-| ≥ +5 °C | 30 min (min time) |
+| ≥ +5 °C | Off — no heating needed |
+| just below +5 °C | 30 min (min time) |
 | 0 °C | 48 min |
 | −10 °C | 84 min |
 | ≤ −20 °C | 120 min (max time, capped) |
 
-Between `min_temp` and `max_temp` the time is interpolated linearly:
+At or above `min_temp` (+5 °C) scheduled heating is skipped entirely — it's warm
+enough that block heating isn't needed. Below `min_temp` the time is interpolated
+linearly:
 
 ```
 duration = min_time + (max_time − min_time) × (min_temp − temp) / (min_temp − max_temp)
 ```
 
 Below `max_temp` the time stays at `max_time`. If the temperature sensor is
-unavailable, the maximum time is used (fail-safe).
+unavailable, the maximum time is used (fail-safe). Manual heating always works
+regardless of the outside temperature.
 
 ### Timing
 
-- Heating turns **on** at `ready_time − duration`.
+- When the outside temperature is below `min_temp`, heating turns **on** at
+  `ready_time − duration`. At or above `min_temp` it stays off.
 - Heating stays **on** until `ready_time + off_delay` (default 15 min) so a late
   start doesn't let the car refreeze.
-- **Manual boost** forces heating on for 2 hours regardless of the schedule and
-  works even when the schedule is disabled.
+- **Manual heating** forces heating on for 2 hours regardless of the schedule and
+  the outside temperature, and works even when the schedule is disabled.
 
 ---
 
@@ -87,7 +92,7 @@ The integration creates these entities (prefix = `car_heater_<name>`, e.g.
 | `sensor.<prefix>_next_ready` | Next ready-to-go time |
 | `sensor.<prefix>_next_start` | Next heating start time |
 | `switch.<prefix>_schedule` | Enable/disable the schedule (holiday toggle) |
-| `switch.<prefix>_manual` | 2-hour manual boost |
+| `switch.<prefix>_manual` | 2-hour manual heating |
 | `time.<prefix>_ready_time` | "Ready by" time of day |
 | `text.<prefix>_weekdays` | Selected weekdays (CSV, e.g. `mon,tue,wed,thu,fri`) |
 
