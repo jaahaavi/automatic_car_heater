@@ -363,9 +363,10 @@ class CarHeaterCard extends HTMLElement {
 
   _hour12() {
     // Honor the user's Home Assistant time-format profile setting.
+    // HA stores this as "24" / "12" (enum values), not the member names.
     const tf = this._hass && this._hass.locale && this._hass.locale.time_format;
-    if (tf === "twenty_four") return false;
-    if (tf === "am_pm") return true;
+    if (tf === "24" || tf === "twenty_four") return false;
+    if (tf === "12" || tf === "am_pm") return true;
     return undefined; // 'language' / 'system' — let the locale decide
   }
 
@@ -486,7 +487,7 @@ window.customCards.push({
 });
 
 console.info(
-  "%c CAR-HEATER-CARD %c 1.2.1 ",
+  "%c CAR-HEATER-CARD %c 1.2.2 ",
   "color: white; background: #ff9800; font-weight: 700;",
   "color: #ff9800; background: white; font-weight: 700;"
 );
