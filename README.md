@@ -1,5 +1,7 @@
 # Automatic Car Heater Timer
 
+<img src="https://raw.githubusercontent.com/jaahaavi/automatic_car_heater/main/docs/logo.png" alt="Automatic car heater" width="700">
+
 A Home Assistant **custom integration** + **Lovelace card** that turns a car
 (block/cabin) heater on ahead of your leaving time, with the heating duration
 scaled to the outside temperature.
@@ -160,13 +162,23 @@ users install one thing. Checklist:
 - Bump `version` in both `manifest.json` and `const.py` (`VERSION`, used for the
   card's cache-busting URL) on each release.
 
+### Brand icon
+HACS's `brands` check is satisfied by an **in-repo brand directory** — this repo
+ships `custom_components/car_heater/brand/icon.png` (256×256, plus an optional
+`icon@2x.png` at 512×512). No `home-assistant/brands` submission is needed to pass
+HACS validation or to show the icon in the HACS store.
+
+> Home Assistant's **own** UI (the "Add integration" dialog and Settings → Devices
+> & services) reads icons only from
+> [`home-assistant/brands`](https://github.com/home-assistant/brands). To show the
+> icon there too, submit the same PNGs to `custom_integrations/car_heater/` in that
+> repo. Optional and not required for HACS.
+
 ### Two ways users install
 - **Now:** HACS → Custom repositories → add your URL as category *Integration*.
 - **Later (optional):** to appear in the default HACS store without "custom
-  repositories", submit a PR to [`hacs/default`](https://github.com/hacs/default)
-  and add your integration's brand (icon/logo) to
-  [`home-assistant/brands`](https://github.com/home-assistant/brands). Both must
-  pass their PR checks; the brands entry is required for default-store integrations.
+  repositories", submit a PR to [`hacs/default`](https://github.com/hacs/default).
+  The in-repo `brand/icon.png` above already satisfies the store's brand check.
 
 > Note: HACS treats each repo as **one** category. Because the card is bundled
 > inside the integration and auto-registered, you don't need a second

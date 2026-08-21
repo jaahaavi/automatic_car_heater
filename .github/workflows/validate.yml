@@ -23,6 +23,3 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
-          # 'brands' fails until the domain is added to home-assistant/brands.
-          # Remove this once your brand PR is merged.
-          ignore: brands
