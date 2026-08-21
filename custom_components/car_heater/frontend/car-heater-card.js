@@ -357,16 +357,32 @@ class CarHeaterCard extends HTMLElement {
   // ------------------------------------------------------------------
   // Formatting helpers
   // ------------------------------------------------------------------
+  _localeCode() {
+    return (this._hass && this._hass.locale && this._hass.locale.language) || undefined;
+  }
+
+  _hour12() {
+    // Honor the user's Home Assistant time-format profile setting.
+    const tf = this._hass && this._hass.locale && this._hass.locale.time_format;
+    if (tf === "twenty_four") return false;
+    if (tf === "am_pm") return true;
+    return undefined; // 'language' / 'system' — let the locale decide
+  }
+
   _fmt(iso) {
     if (!iso) return "—";
     const d = new Date(iso);
     if (isNaN(d)) return "—";
+    const loc = this._localeCode();
+    const timeOpts = { hour: "2-digit", minute: "2-digit" };
+    const h12 = this._hour12();
+    if (h12 !== undefined) timeOpts.hour12 = h12;
     const now = new Date();
     const sameDay = d.toDateString() === now.toDateString();
-    const time = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const time = d.toLocaleTimeString(loc, timeOpts);
     const day = sameDay
       ? "Today"
-      : d.toLocaleDateString([], { weekday: "short", day: "numeric", month: "short" });
+      : d.toLocaleDateString(loc, { weekday: "short", day: "numeric", month: "short" });
     return `${day} ${time} (${this._remaining(iso)})`;
   }
 
@@ -470,7 +486,7 @@ window.customCards.push({
 });
 
 console.info(
-  "%c CAR-HEATER-CARD %c 1.2.0 ",
+  "%c CAR-HEATER-CARD %c 1.2.1 ",
   "color: white; background: #ff9800; font-weight: 700;",
   "color: #ff9800; background: white; font-weight: 700;"
 );

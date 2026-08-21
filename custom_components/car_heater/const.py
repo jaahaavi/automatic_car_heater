@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 DOMAIN = "car_heater"
-VERSION = "1.2.0"
+VERSION = "1.2.1"
 
 # Frontend (Lovelace card) auto-registration
 CARD_URL_PATH = "/car_heater_frontend/car-heater-card.js"
